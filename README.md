@@ -19,5 +19,5 @@ Topics covered by the class syllabus include following concepts of C language:
 - Stack and queue
 - Binary search tree
 - AVL tree
-    
-*Please note that these solutions are shared solely for education purposes and should not be misused in the class*
+     
+*Please note that these solutions are shared solely for education purposes and should not be misused in the class.*
