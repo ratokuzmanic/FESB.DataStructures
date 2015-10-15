@@ -3,7 +3,7 @@
 As part of my Computer science education at local college [FESB](https://www.fesb.unist.hr/) I am enrolled at [data structures class](https://nastava.fesb.unist.hr/nastava/predmeti/4565). These are mine solutions to the assignments given at that very class and they will be uploaded as they are solved through the semester. All of the solutions will be revised by assistant professor before they are published. 
 
 ===
-Class pre requirements include following topic of C language:
+Class pre requirements include following topics of C language:
 - Pointers themselves and pointer to pointer relations
 - Call by reference
 - Dynamic allocation of memory
