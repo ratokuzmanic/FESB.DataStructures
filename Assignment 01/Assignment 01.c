@@ -4,7 +4,7 @@
 
 #define MAX_BUFFER 50
 
-typedef struct {
+typedef struct Student {
 	char FirstName[50];
 	char LastName[50];
 	int Score;
