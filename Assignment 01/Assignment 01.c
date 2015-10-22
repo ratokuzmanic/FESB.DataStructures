@@ -3,6 +3,7 @@
 #include <malloc.h>
 
 #define MAX_BUFFER 50
+#define FILE_NAME "rezultati.txt"
 
 typedef struct Student {
 	char FirstName[50];
@@ -10,25 +11,27 @@ typedef struct Student {
 	int Score;
 } Student;
 
-int CountRows(char*);
-int EnlistStudents(char*, Student*, int);
-void OutputData(Student*, int, int);
+typedef struct Student* StudentPtr;
+
+int CountRowsInFile(char*);
+int EnlistStudentsFromFile(char*, StudentPtr, int);
+void PrintStudentsData(StudentPtr, int, int);
 
 int main(void)
 {
 	int numberOfRows, maxScore;
 
-	Student* _students;
+	StudentPtr _students;
 
-	numberOfRows = CountRows("rezultati.txt");
+	numberOfRows = CountRowsInFile(FILE_NAME);
 	if (numberOfRows == -1)
 	{
 		printf("Problem kod citanja datoteke.\n");
 		return 0;
 	}
-	_students = (Student*)malloc(sizeof(Student) * numberOfRows);
+	_students = (StudentPtr)malloc(sizeof(Student) * numberOfRows);
 
-	maxScore = EnlistStudents("rezultati.txt", _students, numberOfRows);
+	maxScore = EnlistStudentsFromFile(FILE_NAME, _students, numberOfRows);
 	if (maxScore == -1)
 	{
 		printf("Problem kod citanja datoteke.\n");
@@ -40,13 +43,13 @@ int main(void)
 		return 0;
 	}
 
-	OutputData(_students, numberOfRows, maxScore);
+	PrintStudentsData(_students, numberOfRows, maxScore);
 
 	free(_students);
 	return 0;
 }
 
-int CountRows(char* fileName)
+int CountRowsInFile(char* fileName)
 {
 	FILE *file;
 	char* buffer;
@@ -70,7 +73,7 @@ int CountRows(char* fileName)
 	return numberOfRows;
 }
 
-int EnlistStudents(char* fileName, Student* _students, int numberOfStudents)
+int EnlistStudentsFromFile(char* fileName, StudentPtr _students, int numberOfStudents)
 {
 	FILE *file;
 	int counter = 0;
@@ -93,7 +96,7 @@ int EnlistStudents(char* fileName, Student* _students, int numberOfStudents)
 	return maxScore;
 }
 
-void OutputData(Student* _students, int numberOfStudents, int maxScore)
+void PrintStudentsData(StudentPtr _students, int numberOfStudents, int maxScore)
 {
 	int i;
 	for (i = 0; i < numberOfStudents; i++)
