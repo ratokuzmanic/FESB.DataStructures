@@ -36,9 +36,9 @@ void UserMenu(Node);
 int main()
 {
 	Node _head = CreateHeadNode();
-
+	
 	UserMenu(_head);
-
+	
 	DeleteAllElements(_head);
 	free(_head);
 
@@ -137,6 +137,7 @@ void DeleteElementBySurname(Node _head, char* searchQuery)
 			free(_nextElement);
 			break;
 		}
+		_currentElement = GetNextElement(_currentElement);
 		_nextElement = GetNextElement(_currentElement);
 	}
 }
