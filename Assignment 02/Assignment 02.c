@@ -5,10 +5,10 @@
 #define NAMES_MAX_LENGTH 50
 
 typedef struct Person {
-    char FirstName[NAMES_MAX_LENGTH];
-    char LastName[NAMES_MAX_LENGTH];
-    int YearOfBirth;
-    Person* Next;
+	char FirstName[NAMES_MAX_LENGTH];
+	char LastName[NAMES_MAX_LENGTH];
+	int YearOfBirth;
+	Person* Next;
 };
 
 typedef struct Person* Node;
@@ -31,18 +31,20 @@ void DeleteAllElements(Node);
 
 void PrintListElement(Node);
 void PrintAllListElements(Node);
-void UserMenu(Node);
+
+void PrintUserMenuChoices();
+void PrintUserMenu(Node);
 
 int main()
 {
 	Node _head = CreateHeadNode();
-	
-	UserMenu(_head);
-	
+
+	PrintUserMenu(_head);
+
 	DeleteAllElements(_head);
 	free(_head);
 
-    return 0;
+	return 0;
 }
 
 int IsListEmpty(Node _head)
@@ -103,7 +105,7 @@ Node GetElementBySurname(Node _head, char* searchQuery)
 		if (strcmp(_currentElement->LastName, searchQuery) == 0)
 			return _currentElement;
 		_currentElement = GetNextElement(_currentElement);
-	}		
+	}
 
 	return NULL;
 }
@@ -173,25 +175,39 @@ void PrintAllListElements(Node _head)
 	Node _currentElement = _head->Next;
 
 	while (!IsOutOfRange(_currentElement))
-	{ 
+	{
 		PrintListElement(_currentElement);
 		_currentElement = GetNextElement(_currentElement);
 	}
 }
 
-void UserMenu(Node _head)
+void PrintUserMenuChoices()
+{
+	int i;
+	char* options[] = { "Izlist liste", 
+						"Unos elementa na pocetak liste",
+						"Unos elementa na kraj liste",
+						"Pronalazak elementa po prezimenu",
+						"Brisanje elementa po prezimenu",
+						"Izlaz" };
+	for (i = 0; i < 6; i++)
+		printf("%d.\t%s\n", i + 1, options[i]);
+}
+
+void PrintUserMenu(Node _head)
 {
 	int userChoice, yearOfBirth;
-	char firstName[NAMES_MAX_LENGTH], lastName[NAMES_MAX_LENGTH];
+	char firstName[NAMES_MAX_LENGTH], lastName[NAMES_MAX_LENGTH], searchQuery[NAMES_MAX_LENGTH];
 
-	printf("\n---MENI---\nIzaberite zeljenu radnju:\n1.\tIzlist liste\n2.\tUnos elementa na pocetak liste\n"
-		"3.\tUnos elementa na kraj liste\n4.\tPretrazivanje elementa po prezimenu\n5.\tBrisanje elementa po prezimenu\n"
-		"6.\tIzlaz\nUnos:\t");
+	printf("\tMENI\n");
+	PrintUserMenuChoices();
+
+	printf("Odabir:\t");
 	scanf("%d", &userChoice);
 
 	switch (userChoice)
 	{
-		case 1: 
+		case 1:
 			PrintAllListElements(_head);
 			break;
 		case 2:
@@ -206,18 +222,18 @@ void UserMenu(Node _head)
 			break;
 		case 4:
 			printf("Unesite prezime po kojem ce se pretrazivati: ");
-			scanf("%s", lastName);
-			PrintListElement(GetElementBySurname(_head, lastName));
+			scanf("%s", searchQuery);
+			PrintListElement(GetElementBySurname(_head, searchQuery));
 			break;
 		case 5:
 			printf("Unesite prezime osobe koju zelite izbirsati: ");
-			scanf("%s", lastName);
-			DeleteElementBySurname(_head, lastName);
+			scanf("%s", searchQuery);
+			DeleteElementBySurname(_head, searchQuery);
 			break;
 		case 6:
 			return;
 			break;
 	}
 
-	UserMenu(_head);
+	PrintUserMenu(_head);
 }
