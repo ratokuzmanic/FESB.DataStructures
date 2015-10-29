@@ -16,6 +16,7 @@ typedef struct Person* Node;
 int IsListEmpty(Node);
 int IsLastElement(Node);
 int IsOutOfRange(Node);
+int IsLastNameIdentical(char*, char*);
 
 Node CreateHeadNode();
 Node CreateNode(char*, char*, int);
@@ -62,6 +63,11 @@ int IsOutOfRange(Node _element)
 	return _element == NULL;
 }
 
+int IsLastNameIdentical(char* firstName, char* secondName)
+{
+	return strcmp(firstName, secondName) == 0;
+}
+
 Node CreateHeadNode()
 {
 	Node _newHead = (Node)malloc(sizeof(Person));
@@ -102,7 +108,7 @@ Node GetElementBySurname(Node _head, char* searchQuery)
 
 	while (!IsOutOfRange(_currentElement))
 	{
-		if (strcmp(_currentElement->LastName, searchQuery) == 0)
+		if (IsLastNameIdentical(_currentElement->LastName, searchQuery))
 			return _currentElement;
 		_currentElement = GetNextElement(_currentElement);
 	}
@@ -112,7 +118,7 @@ Node GetElementBySurname(Node _head, char* searchQuery)
 
 void InsertElement(Node _previous, Node _next)
 {
-	_next->Next = _previous->Next;
+	_next->Next = GetNextElement(_previous);
 	_previous->Next = _next;
 }
 
@@ -133,7 +139,7 @@ void DeleteElementBySurname(Node _head, char* searchQuery)
 
 	while (!IsOutOfRange(_nextElement))
 	{
-		if (strcmp(_nextElement->LastName, searchQuery) == 0)
+		if (IsLastNameIdentical(_nextElement->LastName, searchQuery))
 		{
 			_currentElement->Next = GetNextElement(_nextElement);
 			free(_nextElement);
@@ -172,8 +178,7 @@ void PrintAllListElements(Node _head)
 		return;
 	}
 
-	Node _currentElement = _head->Next;
-
+	Node _currentElement = GetNextElement(_head);
 	while (!IsOutOfRange(_currentElement))
 	{
 		PrintListElement(_currentElement);
@@ -184,7 +189,7 @@ void PrintAllListElements(Node _head)
 void PrintUserMenuChoices()
 {
 	int i;
-	char* options[] = { 
+	char* options[] = {
 		"Izlist liste",
 		"Unos elementa na pocetak liste",
 		"Unos elementa na kraj liste",
