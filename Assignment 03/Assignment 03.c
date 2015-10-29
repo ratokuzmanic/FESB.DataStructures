@@ -18,7 +18,7 @@ int IsListEmpty(Node);
 int IsLastElement(Node);
 int IsOutOfRange(Node);
 int IsInAlphabetOrder(char*, char*);
-int IsListSorted(Node);
+int IsLastNameIdentical(char*, char*);
 
 Node CreateHeadNode();
 Node CreateNode(char*, char*, int);
@@ -76,20 +76,9 @@ int IsInAlphabetOrder(char* first, char* second)
 	return strcmp(first, second) < 0;
 }
 
-int IsListSorted(Node _head)
+int IsLastNameIdentical(char* firstName, char* secondName)
 {
-	Node _first, _second;
-
-	for (_first = GetNextElement(_head); !IsLastElement(_first); _first = GetNextElement(_first))
-	{
-		for (_second = GetNextElement(_first); !IsOutOfRange(_second); _second = GetNextElement(_second))
-		{
-			if (!IsInAlphabetOrder(_first->LastName, _second->LastName))
-				return 0;
-		}
-	}
-
-	return 1;
+	return strcmp(firstName, secondName) == 0;
 }
 
 Node CreateHeadNode()
@@ -122,7 +111,7 @@ Node GetPreviousElement(Node _head, char* searchQuery)
 
 	while (!IsLastElement(_currentElement))
 	{
-		if (strcmp(GetNextElement(_currentElement)->LastName, searchQuery) == 0)
+		if (IsLastNameIdentical(GetNextElement(_currentElement)->LastName, searchQuery))
 			return _currentElement;
 		_currentElement = GetNextElement(_currentElement);
 	}
@@ -146,7 +135,7 @@ Node GetElementBySurname(Node _head, char* searchQuery)
 
 	while (!IsOutOfRange(_currentElement))
 	{
-		if (strcmp(_currentElement->LastName, searchQuery) == 0)
+		if (IsLastNameIdentical(_currentElement->LastName, searchQuery))
 			return _currentElement;
 		_currentElement = GetNextElement(_currentElement);
 	}
@@ -156,7 +145,7 @@ Node GetElementBySurname(Node _head, char* searchQuery)
 
 void InsertElement(Node _previous, Node _next)
 {
-	_next->Next = _previous->Next;
+	_next->Next = GetNextElement(_previous);
 	_previous->Next = _next;
 }
 
@@ -177,7 +166,7 @@ void DeleteElementBySurname(Node _head, char* searchQuery)
 
 	while (!IsOutOfRange(_nextElement))
 	{
-		if (strcmp(_nextElement->LastName, searchQuery) == 0)
+		if (IsLastNameIdentical(_nextElement->LastName, searchQuery))
 		{
 			_currentElement->Next = GetNextElement(_nextElement);
 			free(_nextElement);
@@ -219,14 +208,15 @@ void SortList(Node _head)
 {
 	Node _endElement = NULL;
 	Node _currentElement;
-	while(GetNextElement(_head) != _endElement)
+
+	while (GetNextElement(_head) != _endElement)
 	{
 		_currentElement = GetNextElement(_head);
-		while(GetNextElement(_currentElement) != _endElement)
+		while (GetNextElement(_currentElement) != _endElement)
 		{
-			if(!IsInAlphabetOrder(_currentElement->LastName, GetNextElement(_currentElement)->LastName))
+			if (!IsInAlphabetOrder(_currentElement->LastName, GetNextElement(_currentElement)->LastName))
 				SwapElementWithNextOne(_head, _currentElement);
-			_currentElement =  GetNextElement(_currentElement);
+			_currentElement = GetNextElement(_currentElement);
 		}
 		_endElement = _currentElement;
 	}
@@ -246,7 +236,6 @@ void PrintAllListElements(Node _head)
 	}
 
 	Node _currentElement = GetNextElement(_head);
-
 	while (!IsOutOfRange(_currentElement))
 	{
 		PrintListElement(_currentElement);
@@ -291,7 +280,8 @@ void ReadListElementsFromFile(Node _head, char* fileName)
 void PrintUserMenuChoices()
 {
 	int i;
-	char* options[] = { "Izlist liste",
+	char* options[] = { 
+		"Izlist liste",
 		"Unos elementa na pocetak liste",
 		"Unos elementa na kraj liste",
 		"Pronalazak elementa po prezimenu",
@@ -319,55 +309,55 @@ void PrintUserMenu(Node _head)
 
 	switch (userChoice)
 	{
-	case 1:
-		PrintAllListElements(_head);
-		break;
-	case 2:
-		printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
-		scanf("%s %s %d", firstName, lastName, &yearOfBirth);
-		AddElementToListStart(_head, CreateNode(firstName, lastName, yearOfBirth));
-		break;
-	case 3:
-		printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
-		scanf("%s %s %d", firstName, lastName, &yearOfBirth);
-		AddElementToListEnd(_head, CreateNode(firstName, lastName, yearOfBirth));
-		break;
-	case 4:
-		printf("Unesite prezime po kojem ce se pretrazivati: ");
-		scanf("%s", searchQuery);
-		PrintListElement(GetElementBySurname(_head, searchQuery));
-		break;
-	case 5:
-		printf("Unesite prezime osobe koju zelite izbirsati: ");
-		scanf("%s", searchQuery);
-		DeleteElementBySurname(_head, searchQuery);
-		break;
-	case 6:
-		printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
-		scanf("%s %s %d", firstName, lastName, &yearOfBirth);
-		printf("Unesite prezime osobe ispred koje zelite ubaciti element: ");
-		scanf("%s", searchQuery);
-		InsertElement(GetPreviousElement(_head, searchQuery), CreateNode(firstName, lastName, yearOfBirth));
-		break;
-	case 7:
-		printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
-		scanf("%s %s %d", firstName, lastName, &yearOfBirth);
-		printf("Unesite prezime osobe nakon koje zelite ubaciti element: ");
-		scanf("%s", searchQuery);
-		InsertElement(GetElementBySurname(_head, searchQuery), CreateNode(firstName, lastName, yearOfBirth));
-		break;
-	case 8:
-		SortList(_head);
-		break;
-	case 9:
-		SaveListElementsToFile(_head, FILE_NAME);
-		break;
-	case 10:
-		ReadListElementsFromFile(_head, FILE_NAME);
-		break;
-	case 11:
-		return;
-		break;
+		case 1:
+			PrintAllListElements(_head);
+			break;
+		case 2:
+			printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
+			scanf("%s %s %d", firstName, lastName, &yearOfBirth);
+			AddElementToListStart(_head, CreateNode(firstName, lastName, yearOfBirth));
+			break;
+		case 3:
+			printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
+			scanf("%s %s %d", firstName, lastName, &yearOfBirth);
+			AddElementToListEnd(_head, CreateNode(firstName, lastName, yearOfBirth));
+			break;
+		case 4:
+			printf("Unesite prezime po kojem ce se pretrazivati: ");
+			scanf("%s", searchQuery);
+			PrintListElement(GetElementBySurname(_head, searchQuery));
+			break;
+		case 5:
+			printf("Unesite prezime osobe koju zelite izbirsati: ");
+			scanf("%s", searchQuery);
+			DeleteElementBySurname(_head, searchQuery);
+			break;
+		case 6:
+			printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
+			scanf("%s %s %d", firstName, lastName, &yearOfBirth);
+			printf("Unesite prezime osobe ispred koje zelite ubaciti element: ");
+			scanf("%s", searchQuery);
+			InsertElement(GetPreviousElement(_head, searchQuery), CreateNode(firstName, lastName, yearOfBirth));
+			break;
+		case 7:
+			printf("Unesite element u formatu <ime prezime godina_rodenja>: ");
+			scanf("%s %s %d", firstName, lastName, &yearOfBirth);
+			printf("Unesite prezime osobe nakon koje zelite ubaciti element: ");
+			scanf("%s", searchQuery);
+			InsertElement(GetElementBySurname(_head, searchQuery), CreateNode(firstName, lastName, yearOfBirth));
+			break;
+		case 8:
+			SortList(_head);
+			break;
+		case 9:
+			SaveListElementsToFile(_head, FILE_NAME);
+			break;
+		case 10:
+			ReadListElementsFromFile(_head, FILE_NAME);
+			break;
+		case 11:
+			return;
+			break;
 	}
 
 	PrintUserMenu(_head);
