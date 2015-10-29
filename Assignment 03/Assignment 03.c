@@ -190,12 +190,12 @@ void DeleteElementBySurname(Node _head, char* searchQuery)
 
 void DeleteAllElements(Node _head)
 {
-	Node _currentElement = _head->Next;
+	Node _currentElement = GetNextElement(_head);
 	Node _nextElement;
 
 	while (!IsOutOfRange(_currentElement))
 	{
-		_nextElement = _currentElement->Next;
+		_nextElement = GetNextElement(_currentElement);
 		free(_currentElement);
 		_currentElement = _nextElement;
 	}
@@ -217,20 +217,18 @@ void SwapElementWithNextOne(Node _head, Node _element)
 
 void SortList(Node _head)
 {
-	Node _currentElement, _nextElement;
-
-	while (!IsListSorted(_head))
+	Node _endElement = NULL;
+	Node _currentElement;
+	while(GetNextElement(_head) != _endElement)
 	{
 		_currentElement = GetNextElement(_head);
-		while (!IsLastElement(_currentElement))
+		while(GetNextElement(_currentElement) != _endElement)
 		{
-			_nextElement = GetNextElement(_currentElement);
-			if (!IsInAlphabetOrder(_currentElement->LastName, _nextElement->LastName))
-			{
+			if(!IsInAlphabetOrder(_currentElement->LastName, GetNextElement(_currentElement)->LastName))
 				SwapElementWithNextOne(_head, _currentElement);
-			}
-			_currentElement = _nextElement;
+			_currentElement =  GetNextElement(_currentElement);
 		}
+		_endElement = _currentElement;
 	}
 }
 
@@ -247,7 +245,7 @@ void PrintAllListElements(Node _head)
 		return;
 	}
 
-	Node _currentElement = _head->Next;
+	Node _currentElement = GetNextElement(_head);
 
 	while (!IsOutOfRange(_currentElement))
 	{
