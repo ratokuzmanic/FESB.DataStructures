@@ -146,12 +146,12 @@ void DeleteElementBySurname(Node _head, char* searchQuery)
 
 void DeleteAllElements(Node _head)
 {
-	Node _currentElement = _head->Next;
+	Node _currentElement = GetNextElement(_head);
 	Node _nextElement;
 
 	while (!IsOutOfRange(_currentElement))
 	{
-		_nextElement = _currentElement->Next;
+		_nextElement = GetNextElement(_currentElement);
 		free(_currentElement);
 		_currentElement = _nextElement;
 	}
@@ -184,12 +184,13 @@ void PrintAllListElements(Node _head)
 void PrintUserMenuChoices()
 {
 	int i;
-	char* options[] = { "Izlist liste", 
-						"Unos elementa na pocetak liste",
-						"Unos elementa na kraj liste",
-						"Pronalazak elementa po prezimenu",
-						"Brisanje elementa po prezimenu",
-						"Izlaz" };
+	char* options[] = { 
+		"Izlist liste",
+		"Unos elementa na pocetak liste",
+		"Unos elementa na kraj liste",
+		"Pronalazak elementa po prezimenu",
+		"Brisanje elementa po prezimenu",
+		"Izlaz" };
 	for (i = 0; i < 6; i++)
 		printf("%d.\t%s\n", i + 1, options[i]);
 }
