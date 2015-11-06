@@ -3,6 +3,7 @@
 #include <malloc.h>
 
 #define NAMES_MAX_LENGTH 50
+#define BUFFER_MAX_SIZE 150
 #define FILE_NAME "lista.txt"
 
 typedef struct Person {
@@ -19,6 +20,7 @@ int IsLastElement(Node);
 int IsOutOfRange(Node);
 int IsInAlphabetOrder(char*, char*);
 int IsLastNameIdentical(char*, char*);
+int IsEmptyRow(char*);
 
 Node CreateHeadNode();
 Node CreateNode(char*, char*, int);
@@ -79,6 +81,11 @@ int IsInAlphabetOrder(char* first, char* second)
 int IsLastNameIdentical(char* firstName, char* secondName)
 {
 	return strcmp(firstName, secondName) == 0;
+}
+
+int IsEmptyRow(char* content)
+{
+	return strlen(content) == 0 && strcmp(content, "\n") == 0;
 }
 
 Node CreateHeadNode()
@@ -264,14 +271,19 @@ void ReadListElementsFromFile(Node _head, char* fileName)
 	FILE* listLog;
 	int yearOfBirth;
 	char firstName[NAMES_MAX_LENGTH], lastName[NAMES_MAX_LENGTH];
+	char buffer[BUFFER_MAX_SIZE];
 
 	listLog = fopen(fileName, "r");
 	if (listLog == NULL) return;
 
 	while (!feof(listLog))
 	{
-		fscanf(listLog, "%s %s %d\n", firstName, lastName, &yearOfBirth);
-		AddElementToListEnd(_head, CreateNode(firstName, lastName, yearOfBirth));
+		fgets(buffer, BUFFER_MAX_SIZE, listLog);
+		if (!IsEmptyRow(buffer))
+		{
+			sscanf(buffer, "%s %s %d", firstName, lastName, &yearOfBirth);
+			AddElementToListEnd(_head, CreateNode(firstName, lastName, yearOfBirth));
+		}		
 	}
 
 	fclose(listLog);
@@ -280,7 +292,7 @@ void ReadListElementsFromFile(Node _head, char* fileName)
 void PrintUserMenuChoices()
 {
 	int i;
-	char* options[] = { 
+	char* options[] = {
 		"Izlist liste",
 		"Unos elementa na pocetak liste",
 		"Unos elementa na kraj liste",
