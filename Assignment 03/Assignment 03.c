@@ -85,12 +85,14 @@ int IsLastNameIdentical(char* firstName, char* secondName)
 
 int IsEmptyRow(char* content)
 {
-	return strlen(content) == 0 && strcmp(content, "\n") == 0;
+	return strlen(content) == 0 || strcmp(content, "\n") == 0;
 }
 
 Node CreateHeadNode()
 {
 	Node _newHead = (Node)malloc(sizeof(Person));
+	if (IsOutOfRange(_newHead)) return NULL;
+
 	_newHead->Next = NULL;
 	return _newHead;
 }
@@ -98,6 +100,7 @@ Node CreateHeadNode()
 Node CreateNode(char* firstName, char* lastName, int yearOfBirth)
 {
 	Node _newNode = (Node)malloc(sizeof(Person));
+	if (IsOutOfRange(_newNode)) return NULL;
 
 	strcpy(_newNode->FirstName, firstName);
 	strcpy(_newNode->LastName, lastName);
@@ -283,6 +286,7 @@ void ReadListElementsFromFile(Node _head, char* fileName)
 		{
 			sscanf(buffer, "%s %s %d", firstName, lastName, &yearOfBirth);
 			AddElementToListEnd(_head, CreateNode(firstName, lastName, yearOfBirth));
+			memset(buffer, 0, strlen(buffer));
 		}		
 	}
 
@@ -304,7 +308,7 @@ void PrintUserMenuChoices()
 		"Upisivanje liste u datoteku",
 		"Ucitavanje liste iz datoteke",
 		"Izlaz" };
-	for (i = 0; i < 11; i++)
+	for (i = 0; i < sizeof(options) / sizeof(char*); i++)
 		printf("%d.\t%s\n", i + 1, options[i]);
 }
 
