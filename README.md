@@ -20,4 +20,4 @@ Class syllabus includes following concepts of C language:
 - Binary search tree
 - AVL tree
      
-*Please note that these solutions are shared solely for education purposes and should not be misused in the class.*
+*Please note that these solutions are shared solely for educational purposes and should not be misused in the class.*
