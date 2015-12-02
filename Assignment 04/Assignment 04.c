@@ -182,7 +182,7 @@ void CopyAllElements(Node _sourceHead, Node _destinationHead)
 
 	while (!IsOutOfRange(_currentElement))
 	{
-		AddElementToFitOrder(_destinationHead, CreateNode(_currentElement->Coefficient, _currentElement->Degree));
+		AddElementToListEnd(_destinationHead, CreateNode(_currentElement->Coefficient, _currentElement->Degree));
 		_currentElement = GetNextElement(_currentElement);
 	}
 }
