@@ -71,6 +71,8 @@ int IsLastNameIdentical(char* firstName, char* secondName)
 Node CreateHeadNode()
 {
 	Node _newHead = (Node)malloc(sizeof(Person));
+	if (IsOutOfRange(_newHead)) return NULL;
+
 	_newHead->Next = NULL;
 	return _newHead;
 }
@@ -78,6 +80,7 @@ Node CreateHeadNode()
 Node CreateNode(char* firstName, char* lastName, int yearOfBirth)
 {
 	Node _newNode = (Node)malloc(sizeof(Person));
+	if (IsOutOfRange(_newNode)) return NULL;
 
 	strcpy(_newNode->FirstName, firstName);
 	strcpy(_newNode->LastName, lastName);
@@ -196,7 +199,7 @@ void PrintUserMenuChoices()
 		"Pronalazak elementa po prezimenu",
 		"Brisanje elementa po prezimenu",
 		"Izlaz" };
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < sizeof(options) / sizeof(char*); i++)
 		printf("%d.\t%s\n", i + 1, options[i]);
 }
 
