@@ -25,7 +25,7 @@ void InsertElement(Node, Node);
 void AddElementToListStart(Node, Node);
 void AddElementToListEnd(Node, Node);
 void AddElementToListAscending(Node, Node);
-void CopyAllElementsInOrder(Node, Node);
+void CopyAllUniqueElementsInOrder(Node, Node);
 void DeleteAllElements(Node);
 
 void Filter_AddUniqueElementsToList(Node, Node, Node, int);
@@ -159,13 +159,14 @@ void AddElementToListAscending(Node _head, Node _element)
 	AddElementToListEnd(_head, _element);
 }
 
-void CopyAllElementsInOrder(Node _sourceHead, Node _destinationHead)
+void CopyAllUniqueElementsInOrder(Node _sourceHead, Node _destinationHead)
 {
 	Node _currentElement = GetNextElement(_sourceHead);
 
 	while (!IsOutOfRange(_currentElement))
 	{
-		AddElementToListAscending(_destinationHead, CreateNode(_currentElement->Value));
+		if(!IsListElement(_destinationHead, _currentElement->Value))
+			AddElementToListAscending(_destinationHead, CreateNode(_currentElement->Value));
 		_currentElement = GetNextElement(_currentElement);
 	}
 }
@@ -200,7 +201,7 @@ Node UnionOfTwoLists(Node _headOfFirst, Node _headOfSecond)
 {
 	Node _headOfUnion = CreateHeadNode();
 
-	CopyAllElementsInOrder(_headOfFirst, _headOfUnion);
+	CopyAllUniqueElementsInOrder(_headOfFirst, _headOfUnion);
 	Filter_AddUniqueElementsToList(_headOfSecond, _headOfUnion, _headOfUnion, 0);
 
 	return _headOfUnion;
@@ -217,7 +218,7 @@ Node IntersectionOfTwoLists(Node _headOfFirst, Node _headOfSecond)
 
 void PrintListElement(Node _element)
 {
-	printf("%d \n", _element->Value);
+	printf("%d\n", _element->Value);
 }
 
 void PrintAllListElements(Node _head)
