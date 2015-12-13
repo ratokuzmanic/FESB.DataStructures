@@ -28,16 +28,16 @@ Node GetNextElement(Node);
 Node GetLastElement(Node);
 
 void InsertElement(Node, Node);
+void AddElementToListStart(Node, Node);
 void AddElementToListEnd(Node, Node);
 void DeleteFirstElementOfList(Node);
-void DeleteLastElementOfList(Node);
 void DeleteAllElements(Node);
 
 int GenerateRandomNumberInRange(int, int);
-void Filter_ListTypeDependentPop(Node, int);
+void Filter_ListTypeDependentPush(Node, int);
 
-void Push(Node);
-void Pop(Node, int);
+void Push(Node, int);
+void Pop(Node);
 
 void PrintListElement(Node);
 void PrintAllListElements(Node);
@@ -121,6 +121,11 @@ void InsertElement(Node _previous, Node _next)
 	_previous->Next = _next;
 }
 
+void AddElementToListStart(Node _head, Node _element)
+{
+	InsertElement(_head, _element);
+}
+
 void AddElementToListEnd(Node _head, Node _element)
 {
 	InsertElement(GetLastElement(_head), _element);
@@ -135,30 +140,10 @@ void DeleteFirstElementOfList(Node _head)
 	free(_firstElement);
 }
 
-void DeleteLastElementOfList(Node _head)
-{
-	Node _currentElement = _head;
-
-	while (!IsLastElement(GetNextElement(_currentElement)))
-		_currentElement = GetNextElement(_currentElement);
-
-	free(GetNextElement(_currentElement));
-	_currentElement->Next = NULL;
-}
-
 void DeleteAllElements(Node _head)
 {
-	Node _currentElement = GetNextElement(_head);
-	Node _nextElement;
-
-	while (!IsOutOfRange(_currentElement))
-	{
-		_nextElement = GetNextElement(_currentElement);
-		free(_currentElement);
-		_currentElement = _nextElement;
-	}
-
-	_head->Next = NULL;
+	while (!IsListEmpty(_head))
+		DeleteFirstElementOfList(_head);
 }
 
 int GenerateRandomNumberInRange(int lowerLimit, int upperLimit)
@@ -166,26 +151,28 @@ int GenerateRandomNumberInRange(int lowerLimit, int upperLimit)
 	return rand()%(upperLimit - lowerLimit + 1) + lowerLimit;
 }
 
-void Filter_ListTypeDependentPop(Node _head, int filterValue)
+void Filter_ListTypeDependentPush(Node _head, int filterValue)
 {
 	if (filterValue == ListTypes::Stack)
-		DeleteLastElementOfList(_head);
+		AddElementToListStart(_head, CreateNode(
+			GenerateRandomNumberInRange(LOWER_LIMIT_ELEMENT_RANGE, UPPER_LIMIT_ELEMENT_RANGE)
+		));
 
 	if (filterValue == ListTypes::Queue)
-		DeleteFirstElementOfList(_head);
+		AddElementToListEnd(_head, CreateNode(
+			GenerateRandomNumberInRange(LOWER_LIMIT_ELEMENT_RANGE, UPPER_LIMIT_ELEMENT_RANGE)
+		));
 }
 
-void Push(Node _head)
+void Push(Node _head, int listType)
 {
-	AddElementToListEnd(_head, CreateNode(
-		GenerateRandomNumberInRange(LOWER_LIMIT_ELEMENT_RANGE, UPPER_LIMIT_ELEMENT_RANGE)
-	));
+	Filter_ListTypeDependentPush(_head, listType);
 }
 
-void Pop(Node _head, int listType)
+void Pop(Node _head)
 {
 	if (!IsListEmpty(_head))
-		Filter_ListTypeDependentPop(_head, listType);
+		DeleteFirstElementOfList(_head);
 }
 
 void PrintListElement(Node _element)
@@ -217,9 +204,9 @@ void PrintOperationsMenu(Node _head, int listType)
 	scanf("%d", &userChoice);
 
 	if (userChoice == 1)
-		Push(_head);
+		Push(_head, listType);
 	else if (userChoice == 2)
-		Pop(_head, listType);
+		Pop(_head);
 	else
 		return;
 
