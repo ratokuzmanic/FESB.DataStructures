@@ -45,10 +45,10 @@ int main()
 {
 	Node _head = CreateHeadNode();
 
-	char* testInput = ReadFirstLineInFile(FILE_NAME);
-	if (testInput != NULL) 
+	char* postfixFormattedInput = ReadFirstLineInFile(FILE_NAME);
+	if (postfixFormattedInput != NULL) 
 	{
-		CalculatePostfixTerm(_head, testInput);
+		CalculatePostfixTerm(_head, postfixFormattedInput);
 
 		PrintAllListElements(_head);
 		DeleteAllElements(_head);
