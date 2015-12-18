@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <malloc.h>
 
 #define BUFFER_MAX_SIZE 4096
@@ -34,6 +36,7 @@ void Push(Node, int);
 void Pop(Node);
 
 void ExecuteOperationOnStack(Node, char);
+void CalculateSinglePostfixTerm(Node, char*);
 void CalculatePostfixTerm(Node, char*);
 
 char* ReadFirstLineInFile(char*);
@@ -90,9 +93,9 @@ int IsValidOperation(char operation)
 			operation == '/';
 }
 
-int ConvertCharNumberToInt(char character)
+int ConvertCharNumberToInt(char* character)
 {
-	return character - '0';
+	return atoi(character);
 }
 
 Node CreateHeadNode()
@@ -186,30 +189,37 @@ void ExecuteOperationOnStack(Node _head, char operation)
 	int* operationElements = GetValuesAndDeleteFirstNElements(_head, 2);
 	switch (operation)
 	{
-	case '+':
-		Push(_head, operationElements[0] + operationElements[1]);
-		break;
-	case '-':
-		Push(_head, operationElements[0] - operationElements[1]);
-		break;
-	case '*':
-		Push(_head, operationElements[0] * operationElements[1]);
-		break;
-	case '/':
-		Push(_head, operationElements[0] / operationElements[1]);
-		break;
+		case '+':
+			Push(_head, operationElements[1] + operationElements[0]);
+			break;
+		case '-':
+			Push(_head, operationElements[1] - operationElements[0]);
+			break;
+		case '*':
+			Push(_head, operationElements[1] * operationElements[0]);
+			break;
+		case '/':
+			Push(_head, operationElements[1] / operationElements[0]);
+			break;
 	}
+}
+
+void CalculateSinglePostfixTerm(Node _head, char* term)
+{
+	if (IsCharacterNumber(*term))
+		Push(_head, ConvertCharNumberToInt(term));
+	else if (IsValidOperation(*term))
+		ExecuteOperationOnStack(_head, *term);
 }
 
 void CalculatePostfixTerm(Node _head, char* term)
 {
-	int i;
-	for (i = 0; term[i]; i++)
+	char* currentTerm;
+	currentTerm = strtok(term, " ");
+	while (currentTerm != NULL)
 	{
-		if (IsCharacterNumber(term[i]))
-			Push(_head, ConvertCharNumberToInt(term[i]));
-		else if (IsValidOperation(term[i]))
-			ExecuteOperationOnStack(_head, term[i]);
+		CalculateSinglePostfixTerm(_head, currentTerm);
+		currentTerm = strtok(NULL, " ");
 	}
 }
 
