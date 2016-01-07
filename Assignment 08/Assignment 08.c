@@ -10,6 +10,12 @@ typedef struct Directory {
 
 typedef Directory* Node;
 
+enum ExceptionTypes {
+    InsufficientMemory,
+    DuplicatedFileName,
+    WrongCommand
+};
+
 int IsOutOfRange(Node);
 int IsInDirectory(Node, Node);
 int IsLastInDirectory(Node);
@@ -19,7 +25,7 @@ Node CreateRootDirectory();
 Node CreateDirectory(char*);
 Node GetParentDirectory(Node, Node);
 Node GetLastInDirectory(Node);
-Node GetFromDirectoryBySurname(Node, char*);
+Node GetFromDirectoryByName(Node, char*);
 
 void AddToDirectory(Node, Node);
 void PrintDirectoryDetails(Node);
@@ -35,6 +41,8 @@ int   Command_IsDir(char*);
 int   Command_IsExit(char*);
 char* Command_GetValue(char*);
 Node  Command_Execute(Node, Node, char*);
+
+void ExceptionHandler(int);
 
 int main()
 {
@@ -81,20 +89,17 @@ int IsDirectoryEmpty(Node _directory)
 
 Node CreateRootDirectory()
 {
-    Node _rootDirectory = (Node)malloc(sizeof(Directory));
-    if (_rootDirectory == NULL) return NULL;
-
-    strcpy(_rootDirectory->Name, "Root");
-    _rootDirectory->FirstChild = NULL;
-    _rootDirectory->NextBrother = NULL;
-
-    return _rootDirectory;
+    return CreateDirectory("Root");
 }
 
 Node CreateDirectory(char* name)
 {
     Node _newDirectory = (Node)malloc(sizeof(Directory));
-    if (_newDirectory == NULL) return NULL;
+    if (_newDirectory == NULL)
+    {
+        ExceptionHandler(ExceptionTypes::InsufficientMemory);
+        return NULL;
+    }
 
     strcpy(_newDirectory->Name, name);
     _newDirectory->FirstChild = NULL;
@@ -105,6 +110,8 @@ Node CreateDirectory(char* name)
 
 Node GetParentDirectory(Node _directory, Node _root)
 {
+    if (_directory == _root) return _root;
+
     Node _currentDirectory = _root;
     while (!IsOutOfRange(_currentDirectory))
     {
@@ -161,7 +168,12 @@ void AddToDirectory(Node _directory, Node _parent)
         _parent->FirstChild = _directory;
         return;
     }
-    GetLastInDirectory(_parent)->NextBrother = _directory;
+    if (IsOutOfRange(GetFromDirectoryByName(_parent, _directory->Name)))
+    {
+        GetLastInDirectory(_parent)->NextBrother = _directory;
+        return;
+    }
+    ExceptionHandler(ExceptionTypes::DuplicatedFileName);
 }
 
 void PrintDirectoryDetails(Node _directory)
@@ -216,10 +228,6 @@ void PrintUserMenu(Node _root, Node _currentDirectory)
     if (!IsOutOfRange(_commandResult))
     {
         _currentDirectory = _commandResult;
-    }
-    else
-    {
-        printf("Neispravna naredba.\n");
     }
 
     if (!Command_IsExit(userChoice))
@@ -276,7 +284,7 @@ Node Command_Execute(Node _currentDirectory, Node _root, char* rawCommand)
         AddToDirectory(
             CreateDirectory(value),
             _currentDirectory
-        );       
+        );  
     }
     else if (Command_IsCdOut(command))
     {
@@ -297,11 +305,32 @@ Node Command_Execute(Node _currentDirectory, Node _root, char* rawCommand)
     else if (Command_IsDir(command))
     {
         PrintDirectoryContent(_currentDirectory);
-    }  
-    else if(!Command_IsExit(command))
+    }
+    else if (!Command_IsExit(command))
     {
+        ExceptionHandler(ExceptionTypes::WrongCommand);
         return NULL;
     }
 
     return _currentDirectory;
+}
+
+void ExceptionHandler(int exceptionCode)
+{
+    printf("\nGreska:\n");
+
+    switch (exceptionCode)
+    {
+        case ExceptionTypes::InsufficientMemory:
+            printf("Nije moguce alocirati potrebnu memoriju.");
+            break;
+        case ExceptionTypes::DuplicatedFileName:
+            printf("Vec postoji datoteka s tim imenom u direktoriju.");
+            break;
+        case ExceptionTypes::WrongCommand:
+            printf("Neispravna naredba.");
+            break;
+    }
+
+    printf("\n");
 }
