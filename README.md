@@ -1,6 +1,6 @@
 # Data structures class solutions
 
-I am enrolled at [data structures class](https://nastava.fesb.unist.hr/nastava/predmeti/4565) as part of my Computer science education at local college [FESB](https://www.fesb.unist.hr/). These are my solutions to the assignments given at that very class and they will be uploaded as they are solved through the semester. All of the solutions will be reviewed and if needed revised by assistant professor.
+I was enrolled at [data structures class](https://nastava.fesb.unist.hr/nastava/predmeti/4565) as part of my Computer science education at local college [FESB](https://www.fesb.unist.hr/). These are my solutions to most of the assignments given at that very class. All solutions were reviewed by assistant professor.
 
 ===
 Class prerequirements:
@@ -16,7 +16,9 @@ Class syllabus includes following concepts of C language:
 - List and (doubly) linked list
 - Self referencing structures
 - Polynomic addition and multiplication
+- Postfix calculations
 - Stack and queue
+- Trees
 - Binary search tree
 - AVL tree
      
