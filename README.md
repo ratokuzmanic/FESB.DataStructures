@@ -1,6 +1,6 @@
 # :mortar_board: Data structures class solutions
 
-I was enrolled at [data structures class](https://nastava.fesb.unist.hr/nastava/predmeti/4565) as part of my Computer science education at local college [FESB](https://www.fesb.unist.hr/). These are my solutions to most of the assignments given at that very class. All solutions were reviewed by assistant professor.
+I was enrolled at a [data structures class](https://nastava.fesb.unist.hr/nastava/predmeti/4565) as part of my Computer science education at a local college [FESB](https://www.fesb.unist.hr/). These are my solutions to the most of the assignments given at that very class. All solutions were reviewed by assistant professor.
 
 ===
 Class prerequirements:
@@ -22,4 +22,4 @@ Class syllabus includes following concepts:
 - Binary search tree
 - AVL tree
      
-:warning: *Please note that these solutions are shared solely for educational purposes and should not be misused in the class.*
+:warning: These solutions are shared solely for educational purposes and should not be misused in the class.
